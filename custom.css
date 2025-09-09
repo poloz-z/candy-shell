@@ -1,0 +1,91 @@
+.wallpaper {
+  border-radius: 20px; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/*
+.dashboard {
+  background-image: url('dash.png');
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover;
+  opacity: 1;
+  border-radius: 20px;
+}
+*/
+
+.pfp {
+  border-radius: 20px; 
+  background-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 100%),
+    url("pfp.png");
+  background-color: #cccccc; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+}
+
+.cal-header {
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 20px; 
+  font-weight: 500; 
+  color: #333; 
+  letter-spacing: 0.5px; 
+  margin-bottom: 5px; 
+}
+
+.box_dashboard {
+  border-radius: 20px; 
+  background-color: white;
+}
+
+.box-search {
+  border-radius: 20px; 
+  background-color: white;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 5px;
+}
+
+.cal-today {
+  background-color: black;
+  font-weight: 600;
+  border-radius: 50%;
+  min-width: 22px;
+  min-height: 22px;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 12px; 
+  font-weight: 500; 
+  color: #fff; 
+  padding: 8px;
+  margin: 0px;
+}
+
+.cal-day {
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  letter-spacing: 1px; 
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 50%;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 2px;
+  padding: 4px;
+}
+
+.time_label {
+  color: #fff;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  padding: 12px;
+}
+
+.user_label {
+  font-style: italic;
+  color: #fff;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  padding-left: 20px;
+}
