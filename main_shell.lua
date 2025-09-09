@@ -51,10 +51,10 @@ function app:on_startup()
   local left_bar = Gtk.Label.new("l")
   left_bar:set_size_request(10, 1)
 
-  local right_bar = Gtk.Label.new("bar")
+  local right_bar = Gtk.Label.new()
   right_bar:set_size_request(50, 1)
 
-  local bottom_bar = Gtk.Label.new("bottom")
+  local bottom_bar = Gtk.Label.new()
   bottom_bar:set_size_request(1, 10)
 
   -- desktop grids
