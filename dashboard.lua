@@ -26,7 +26,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
 
 
   -- Crear el calendario usando el módulo separado
-  local widget_calendario = calendario.crear_calendario(f.month, f.year)
+  local widget_calendario = calendario.updatable_calendar()
   start_dashboard:append(widget_calendario)
 
   local search = Gtk.CenterBox.new()
