@@ -39,6 +39,17 @@
   background-color: white;
 }
 
+.box_icon {
+  border-radius: 20px; 
+  background-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%),
+    url("icon_box.jpg");
+  background-color: #cccccc; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+}
+
 .box-search {
   border-radius: 20px; 
   background-color: white;
@@ -88,4 +99,46 @@
   font-size: 15px;
   font-weight: 400;
   padding-left: 20px;
+}
+
+.profile_icon {
+  border-radius: 100px;
+  width: 100px;
+  height: 100px; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+}
+
+.name_label {
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: black; 
+}
+
+.frase_label {
+  padding: 8px 16px;
+  color: white; /* Un gris medio para el texto */
+  font-family: 'Dancing Script', sans-serif; /* O cualquier otra fuente elegante, como 'Lora' o 'Playfair Display' */
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.circular {
+    border-radius: 100px; /* Un valor alto para asegurar que sea un círculo */
+    padding: 1px;       /* Ajusta el relleno según el tamaño de tu icono */
+    border-width: 0;     /* Elimina el borde predeterminado */
+    background-color: black;
+}
+
+/* Opcional: Estilo al pasar el ratón */
+button.circular:hover {
+    background-color: #f0f0f0;
+}
+
+.icono {
+    width: 10px;
+    height: 10px;
 }

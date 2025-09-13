@@ -1,6 +1,7 @@
 local lgi = require("lgi")
 local Gtk = lgi.require("Gtk", "4.0")
 local Gdk = lgi.require("Gdk", "4.0")
+local GdkPixbuf = lgi.require("GdkPixbuf", "2.0")
 local GLib = lgi.require("GLib")
 
 local calendario = require("calendario")
@@ -105,19 +106,64 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   local uptime = create_uptime()
   box_pfp:append(uptime)
 
-
   start_dashboard_main:append(box_pfp)
 
 
-
   
+  --------- CENTER BOX
+  local center_box_dashboard = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
+  center_box_dashboard.margin_bottom = 10
+  center_box_dashboard.margin_start = 20
+  center_box_dashboard.margin_top = 10
+  center_box_dashboard:add_css_class("box_icon")
+  center_box_dashboard:set_size_request(300, 0)
+
+  local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('icon.jpg',120, 120, true)
+  local imgbuf = Gdk.Texture.new_for_pixbuf(icon_buf)
+  local icon_pfp = Gtk.Picture.new_for_paintable(imgbuf)
+  icon_pfp.margin_start = 10
+  icon_pfp.margin_top = 10
+  icon_pfp:add_css_class('profile_icon')
+
+
+  local name_label = Gtk.Label.new('Yyrrka Polo 🌸')
+  name_label.margin_start = 10
+  name_label.margin_top = 10
+  name_label:add_css_class('name_label')
+
+  local frase = Gtk.Label.new('Mais distante da luz.\nMais próxima do vazio.')
+  frase:add_css_class('frase_label')
+
+  local poweroff_icon = Gtk.Image.new_from_file('power.svg')
+  poweroff_icon:add_css_class("icono")
+  local poweroff_button = Gtk.Button.new()
+  poweroff_button:set_child(poweroff_icon)
+  poweroff_button:add_css_class("circular")
+
+  local exit_icon = Gtk.Image.new_from_file('exit.svg')
+  local exit_button = Gtk.Button.new()
+  exit_button:set_child(exit_icon)
+
+  local lock_icon = Gtk.Image.new_from_file('lock.svg')
+  local lock_button = Gtk.Button.new()
+  lock_button:set_child(lock_icon)
+
+  local celdas = Gtk.Grid.new()
+  celdas:attach(icon_pfp, 1, 1, 1, 1)  -- columna, fila, ancho, alto
+  celdas:attach(name_label, 2, 1, 1, 1)
+  celdas:attach(frase, 1, 2, 3, 1)
+  celdas:attach(poweroff_button,  1, 3, 1, 1)
+  celdas:attach(exit_button,      2, 3, 1, 1)
+  celdas:attach(lock_button,      3, 3, 1, 1)
+
+  center_box_dashboard:append(celdas)
 
   local dashboard = Gtk.CenterBox.new()
   dashboard:set_size_request(0, 300)
   dashboard.hexpand = false
   dashboard.vexpand = false
   dashboard.start_widget = start_dashboard_main
-  dashboard.center_widget = Gtk.Label.new("dashboard")
+  dashboard.center_widget = center_box_dashboard
   dashboard:add_css_class("dashboard")
 
   -- revealer para mostrar/ocultar el dashboard
