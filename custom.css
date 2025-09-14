@@ -103,8 +103,6 @@
 
 .profile_icon {
   border-radius: 100px;
-  width: 100px;
-  height: 100px; 
   background-position: center; 
   background-repeat: no-repeat; 
   background-size: cover; 
@@ -126,19 +124,15 @@
   letter-spacing: 0.5px;
 }
 
-.circular {
-    border-radius: 100px; /* Un valor alto para asegurar que sea un círculo */
-    padding: 1px;       /* Ajusta el relleno según el tamaño de tu icono */
-    border-width: 0;     /* Elimina el borde predeterminado */
+button.tray_button {
+    border-radius: 10px; 
+    border-width: 1;    
     background-color: black;
+    background-image: none
 }
 
 /* Opcional: Estilo al pasar el ratón */
-button.circular:hover {
+button.tray_button:hover {
     background-color: #f0f0f0;
 }
 
-.icono {
-    width: 10px;
-    height: 10px;
-}

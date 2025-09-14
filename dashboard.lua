@@ -118,7 +118,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   center_box_dashboard:add_css_class("box_icon")
   center_box_dashboard:set_size_request(300, 0)
 
-  local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('icon.jpg',120, 120, true)
+  local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('icon.jpg',100, 100, true)
   local imgbuf = Gdk.Texture.new_for_pixbuf(icon_buf)
   local icon_pfp = Gtk.Picture.new_for_paintable(imgbuf)
   icon_pfp.margin_start = 10
@@ -134,27 +134,44 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   local frase = Gtk.Label.new('Mais distante da luz.\nMais próxima do vazio.')
   frase:add_css_class('frase_label')
 
+  local tray_power = Gtk.CenterBox.new()
+  tray_power.margin_start = 30
+  tray_power.margin_top = 35
+
   local poweroff_icon = Gtk.Image.new_from_file('power.svg')
-  poweroff_icon:add_css_class("icono")
   local poweroff_button = Gtk.Button.new()
+  poweroff_button:set_size_request(32, 32)
   poweroff_button:set_child(poweroff_icon)
-  poweroff_button:add_css_class("circular")
+  poweroff_button:add_css_class("tray_button")
+  function poweroff_button:on_clicked()
+    GLib.spawn_command_line_sync("systemctl poweroff")
+  end
 
   local exit_icon = Gtk.Image.new_from_file('exit.svg')
   local exit_button = Gtk.Button.new()
+  exit_button:set_size_request(32, 32)
   exit_button:set_child(exit_icon)
+  exit_button:add_css_class("tray_button")
+  function exit_button:on_clicked()
+    GLib.spawn_command_line_sync("swaymsg exit")
+  end
+
 
   local lock_icon = Gtk.Image.new_from_file('lock.svg')
   local lock_button = Gtk.Button.new()
+  lock_button:set_size_request(32, 32)
   lock_button:set_child(lock_icon)
+  lock_button:add_css_class("tray_button")
+
+  tray_power.start_widget = poweroff_button
+  tray_power.center_widget = exit_button
+  tray_power.end_widget = lock_button
 
   local celdas = Gtk.Grid.new()
   celdas:attach(icon_pfp, 1, 1, 1, 1)  -- columna, fila, ancho, alto
   celdas:attach(name_label, 2, 1, 1, 1)
   celdas:attach(frase, 1, 2, 3, 1)
-  celdas:attach(poweroff_button,  1, 3, 1, 1)
-  celdas:attach(exit_button,      2, 3, 1, 1)
-  celdas:attach(lock_button,      3, 3, 1, 1)
+  celdas:attach(tray_power,  1, 3, 3, 1)
 
   center_box_dashboard:append(celdas)
 
