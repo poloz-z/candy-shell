@@ -55,5 +55,39 @@ function M.get_swap_free()
   return info.swap.free
 end
 
+local last_total = 0 
+local last_idle = 0
+function M.get_cpu_used()
+  local cpu = GTop.glibtop_cpu()
+  GTop.glibtop_get_cpu(cpu)
+
+  if last_total > 0 and last_idle > 0 then 
+    local total_diff = cpu.total - last_total
+    local idle_diff = cpu.idle - last_idle
+    if total_diff > 0 then
+      local usage = 100*(1-(idle_diff/total_diff))
+      last_total = cpu.total
+      last_idle = cpu.idle
+      return math.min(100, math.max(0, usage))
+    end
+  end
+  last_total = cpu.total
+  last_idle = cpu.idle
+  return 0
+end
+
+
+function M.get_df_info(mount)
+  local to_gb = 1024^3
+  local buf = GTop.glibtop_fsusage()
+  GTop.glibtop_get_fsusage(buf,mount)
+  return {
+    size  = math.floor((buf.blocks*buf.block_size)/to_gb),
+    used  = math.floor(((buf.blocks-buf.bavail)*buf.block_size)/to_gb),
+    free  = math.floor((buf.bfree * buf.block_size)/to_gb),
+    avail = math.floor((buf.bavail * buf.block_size)/to_gb)
+  }
+end
+
 return M 
 
