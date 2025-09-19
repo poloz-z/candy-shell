@@ -1,5 +1,6 @@
 lgi = require("lgi")
 GTop = lgi.require("GTop")
+UPowerGlib = lgi.require("UPowerGlib")
 
 local M = {} 
 
@@ -87,6 +88,66 @@ function M.get_df_info(mount)
     free  = math.floor((buf.bfree * buf.block_size)/to_gb),
     avail = math.floor((buf.bavail * buf.block_size)/to_gb)
   }
+end
+
+function M.get_battery_info()
+  local client = UPowerGlib.Client.new()
+  for _,device in pairs(client:get_devices()) do 
+    if device:get_object_path() == "/org/freedesktop/UPower/devices/battery_BAT0" then
+      return {
+        percentage = device.percentage,
+        state = device.state,
+        time_empty = device.time_to_empty,
+        time_full = device.time_to_full
+      } 
+    end
+  end
+end
+
+function M.get_battery_percentage()
+  local info = M.get_battery_info()
+  return info.percentage
+end
+
+function M.get_battery_state()
+  --[[
+    The device state.
+
+    UNKNOWN = 0
+    CHARGING = 1
+    DISCHARGING = 2
+    EMPTY = 3
+    FULLY_CHARGED = 4
+    PENDING_CHARGE = 5
+    PENDING_DISCHARGE = 6
+    LAST = 7
+  ]]
+  local info = M.get_battery_info()
+  return tonumber(info.state)
+end
+
+function M.get_battery_time_empty()
+  local info = M.get_battery_info()
+  local seconds = info.time_empty
+  local hour = math.floor(seconds/3600)
+  local min = math.floor((seconds%3600)/60)
+  local sec = seconds%60
+  local bstr = hour..":"..min..":"..sec
+  return bstr 
+end
+
+function M.get_battery_time_full()
+  if M.get_battery_state() ~= 1 then 
+    return false
+  else
+    local info = M.get_battery_info()
+    local seconds = info.time_full
+    local hour = math.floor(seconds/3600)
+    local min = math.floor((seconds%3600)/60)
+    local sec = seconds%60
+    local bstr = hour..":"..min..":"..sec
+    return bstr 
+  end
 end
 
 return M 
