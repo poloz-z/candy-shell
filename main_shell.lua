@@ -37,7 +37,7 @@ function app:on_startup()
   LayerShell.set_margin(win, LayerShell.Edge.BOTTOM, 15)
 
   -- wallpaper
-  local wallpaper = Gtk.Picture.new_for_filename("wall.jpg")
+  local wallpaper = Gtk.Picture.new_for_filename("res/wall.jpg")
   wallpaper.content_fit = Gtk.ContentFit.COVER
   wallpaper.halign = Gtk.Align.FILL
   wallpaper.valign = Gtk.Align.FILL

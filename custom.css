@@ -3,22 +3,11 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-/*
-.dashboard {
-  background-image: url('dash.png');
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-size: cover;
-  opacity: 1;
-  border-radius: 20px;
-}
-*/
-
 .pfp {
   border-radius: 20px; 
   background-image:
     linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 100%),
-    url("pfp.png");
+    url("res/pfp.png");
   background-color: #cccccc; 
   background-position: center; 
   background-repeat: no-repeat; 
@@ -43,7 +32,7 @@
   border-radius: 20px; 
   background-image:
     linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%),
-    url("icon_box.jpg");
+    url("res/icon_box.jpg");
   background-color: #cccccc; 
   background-position: center; 
   background-repeat: no-repeat; 
@@ -117,8 +106,8 @@
 
 .frase_label {
   padding: 8px 16px;
-  color: white; /* Un gris medio para el texto */
-  font-family: 'Dancing Script', sans-serif; /* O cualquier otra fuente elegante, como 'Lora' o 'Playfair Display' */
+  color: white; 
+  font-family: 'Dancing Script', sans-serif; 
   font-size: 26px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -128,10 +117,9 @@ button.tray_button {
     border-radius: 10px; 
     border-width: 1;    
     background-color: black;
-    background-image: none
+    background-image: none;
 }
 
-/* Opcional: Estilo al pasar el ratón */
 button.tray_button:hover {
     background-color: #f0f0f0;
 }

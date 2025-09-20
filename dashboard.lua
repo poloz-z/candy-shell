@@ -32,19 +32,13 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
 
   local search = Gtk.CenterBox.new()
   search:add_css_class('box-search')
-  search.start_widget = Gtk.Image.new_from_file("google.svg")
+  search.start_widget = Gtk.Image.new_from_file("res/google.svg")
   search.center_widget = Gtk.Label.new()
-  search.end_widget = Gtk.Image.new_from_file("search.svg")
+  search.end_widget = Gtk.Image.new_from_file("res/search.svg")
   start_dashboard:append(search)
 
   start_dashboard_main:append(start_dashboard)
   
-  --imgbuf = Gdk.Paintable.new_empty(200, 100)
-  --local pfp = Gtk.Picture.new_for_paintable(imgbuf)
-  --pfp.hexpand = false
-  --pfp.vexpand = false
-  --pfp.halign = Gtk.Align.CENTER
-  --pfp.valign = Gtk.Align.CENTER
 
   local box_pfp = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
   box_pfp.margin_start = 30
@@ -118,7 +112,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   center_box_dashboard:add_css_class("box_icon")
   center_box_dashboard:set_size_request(300, 0)
 
-  local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('icon.jpg',100, 100, true)
+  local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('res/icon.jpg',100, 100, true)
   local imgbuf = Gdk.Texture.new_for_pixbuf(icon_buf)
   local icon_pfp = Gtk.Picture.new_for_paintable(imgbuf)
   icon_pfp.margin_start = 10
@@ -138,7 +132,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   tray_power.margin_start = 30
   tray_power.margin_top = 35
 
-  local poweroff_icon = Gtk.Image.new_from_file('power.svg')
+  local poweroff_icon = Gtk.Image.new_from_file('res/power.svg')
   local poweroff_button = Gtk.Button.new()
   poweroff_button:set_size_request(32, 32)
   poweroff_button:set_child(poweroff_icon)
@@ -147,7 +141,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
     GLib.spawn_command_line_sync("systemctl poweroff")
   end
 
-  local exit_icon = Gtk.Image.new_from_file('exit.svg')
+  local exit_icon = Gtk.Image.new_from_file('res/exit.svg')
   local exit_button = Gtk.Button.new()
   exit_button:set_size_request(32, 32)
   exit_button:set_child(exit_icon)
@@ -157,7 +151,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   end
 
 
-  local lock_icon = Gtk.Image.new_from_file('lock.svg')
+  local lock_icon = Gtk.Image.new_from_file('res/lock.svg')
   local lock_button = Gtk.Button.new()
   lock_button:set_size_request(32, 32)
   lock_button:set_child(lock_icon)
