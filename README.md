@@ -2,7 +2,7 @@
 
 A lightweight, custom **Wayland shell** built with **GTK4/Adwaita** and **Gtk-Layer-Shell** via Lua bindings, prioritizing modularity and a minimal desktop experience.
 
-(res/preview.png)
+![](res/preview.png)
 
 ---
 
