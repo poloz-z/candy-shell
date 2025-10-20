@@ -1,69 +1,59 @@
+
+
 .wallpaper {
-  border-radius: 20px; 
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.8), 0 1px 10px rgba(0, 0, 0, 0.9); 
 }
 
 .pfp {
-  border-radius: 20px; 
+  border-radius: 20px;
   background-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%),
     url("res/pfp.png");
-  background-color: #cccccc; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-size: cover; 
+  background-color: #FCD9EA;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .cal-header {
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-size: 20px; 
-  font-weight: 500; 
-  color: #333; 
-  letter-spacing: 0.5px; 
-  margin-bottom: 5px; 
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1F1A1C;
+  letter-spacing: 0.15px;
+  margin-bottom: 5px;
 }
 
 .box_dashboard {
-  border-radius: 20px; 
-  background-color: white;
+  border-radius: 20px;
+  background-color: #FCFCFC;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .box_icon {
-  border-radius: 20px; 
+  border-radius: 20px;
   background-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%),
     url("res/icon_box.jpg");
-  background-color: #cccccc; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-size: cover; 
+  background-color: #953E78; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .box-search {
-  border-radius: 20px; 
-  background-color: white;
+  border-radius: 20px;
+  background-color: #FCD9EA;
   min-width: 32px;
   min-height: 32px;
   padding: 5px;
-}
-
-.cal-today {
-  background-color: black;
-  font-weight: 600;
-  border-radius: 50%;
-  min-width: 22px;
-  min-height: 22px;
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-size: 12px; 
-  font-weight: 500; 
-  color: #fff; 
-  padding: 8px;
-  margin: 0px;
+  border: 1px solid #82737A; 
 }
 
 .cal-day {
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  letter-spacing: 1px; 
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.25px;
   font-size: 12px;
   font-weight: 400;
   border-radius: 50%;
@@ -71,56 +61,74 @@
   min-height: 18px;
   margin: 2px;
   padding: 4px;
+  color: #1F1A1C; 
+}
+
+.cal-today {
+  background-color: #953E78; 
+  font-weight: 500;
+  border-radius: 50%;
+  min-width: 22px;
+  min-height: 22px;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  color: #FFFFFF; 
+  padding: 8px;
+  margin: 0px;
 }
 
 .time_label {
-  color: #fff;
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-size: 28px;
-  font-weight: 900;
+  color: #FFFFFF; 
+  font-family: "Roboto", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
   padding: 12px;
 }
 
 .user_label {
   font-style: italic;
-  color: #fff;
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  font-size: 15px;
+  color: #FFFFFF; 
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
   font-weight: 400;
   padding-left: 20px;
 }
 
 .profile_icon {
-  border-radius: 100px;
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-size: cover; 
+  border-radius: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .name_label {
-  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", sans-serif;
-  font-size: 20px;
+  font-family: "Dancing Script", sans-serif;
+  font-size: 32px;
   font-weight: 500;
-  color: black; 
+  color: #1F1A1C;
 }
 
 .frase_label {
   padding: 8px 16px;
-  color: white; 
-  font-family: 'Dancing Script', sans-serif; 
+  color: #FFFFFF;
+  font-family: 'Dancing Script', cursive;
   font-size: 26px;
   font-weight: 500;
   letter-spacing: 0.5px;
 }
 
 button.tray_button {
-    border-radius: 10px; 
-    border-width: 1;    
-    background-color: black;
-    background-image: none;
+  border-radius: 10px;
+  border-width: 0;
+  background-color: #953E78; 
+  color: #FFFFFF; 
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  padding: 10px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12); 
 }
 
 button.tray_button:hover {
-    background-color: #f0f0f0;
+  background-color: #A9598C; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 2px 3px rgba(0, 0, 0, 0.15); 
 }
-

@@ -31,6 +31,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   start_dashboard:append(widget_calendario)
 
   local search = Gtk.CenterBox.new()
+  search.margin_bottom = 10
   search:add_css_class('box-search')
   search.start_widget = Gtk.Image.new_from_file("res/google.svg")
   search.center_widget = Gtk.Label.new()
@@ -120,7 +121,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   icon_pfp:add_css_class('profile_icon')
 
 
-  local name_label = Gtk.Label.new('Yyrrka Polo 🌸')
+  local name_label = Gtk.Label.new('~Jorge Polo 🌸')
   name_label.margin_start = 10
   name_label.margin_top = 10
   name_label:add_css_class('name_label')
