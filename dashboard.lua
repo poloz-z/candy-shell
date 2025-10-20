@@ -130,7 +130,8 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   frase:add_css_class('frase_label')
 
   local tray_power = Gtk.CenterBox.new()
-  tray_power.margin_start = 30
+  tray_power.margin_start = 10
+  tray_power.margin_end = 10
   tray_power.margin_top = 35
 
   local poweroff_icon = Gtk.Image.new_from_file('res/power.svg')
