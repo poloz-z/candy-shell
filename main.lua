@@ -18,9 +18,7 @@ function app:on_startup()
     local bg_win = Adw.ApplicationWindow.new(self)
     bg_win:set_resizable(false)
 
-    -- Carga el archivo CSS
     local provider = Gtk.CssProvider()
-    -- Asumiendo que custom.css está en el mismo path o se ajustará
     provider:load_from_path("custom.css")
     local display = bg_win:get_display()
     Gtk.StyleContext.add_provider_for_display(display, provider, 600)
@@ -49,19 +47,14 @@ function app:on_startup()
 
     local top_bar_widget = Dashboard.create_dashboard(Gtk, LayerShell, GLib)
 
-    -- INICIO DEL CAMBIO: Reemplazamos Gtk.Label por Gtk.Box para espaciadores limpios
-    -- Espaciador lateral izquierdo (10px de ancho)
     local left_bar = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-    left_bar:set_size_request(10, 1) -- Se mantiene el tamaño de 10px de ancho
+    left_bar:set_size_request(15, 1) 
 
-    -- Espaciador lateral derecho (50px de ancho)
     local right_bar = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-    right_bar:set_size_request(50, 1) -- Se mantiene el tamaño de 50px de ancho
+    right_bar:set_size_request(50, 1)
 
-    -- Espaciador inferior (10px de alto)
     local bottom_bar = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
-    bottom_bar:set_size_request(1, 10) -- Se mantiene el tamaño de 10px de alto
-    -- FIN DEL CAMBIO
+    bottom_bar:set_size_request(1, 15) 
 
     -- desktop grids
     local celdas = Gtk.Grid.new()

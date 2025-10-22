@@ -5,20 +5,54 @@ local GdkPixbuf = lgi.require("GdkPixbuf")
 
 local M = {}
 
+local player = nil
+
+local function init_player()
+  if player then return player end
+   
+  local new_player = Playerctl.Player.new()
+  
+  if new_player then
+    player = new_player
+    player.on_exit = function(self)
+      player = nil
+    end
+  end
+  return player
+end
+
+
+local function get_player()
+  if not player then
+    return init_player()
+  end
+  return player
+end
+
 function M.player_info()
-  player = Playerctl.Player.new()
+  local current_player = get_player()
+  if not current_player then
+    return {
+      artist = "none",
+      title  = "none",
+      album  = "none",
+      artUrl = "none",
+      length = 0
+    }
+  end
+
   return {
-  	artist = player:print_metadata_prop("xesam:artist"),
-  	title  = player:print_metadata_prop("xesam:title"),
-  	album  = player:print_metadata_prop("xesam:album"),
-  	artUrl = player:print_metadata_prop("mpris:artUrl"),
-  	length = player:print_metadata_prop("mpris:length")
- }
+    artist = current_player:print_metadata_prop("xesam:artist"),
+    title  = current_player:print_metadata_prop("xesam:title"),
+    album  = current_player:print_metadata_prop("xesam:album"),
+    artUrl = current_player:print_metadata_prop("mpris:artUrl"),
+    length = current_player:print_metadata_prop("mpris:length")
+  }
 end
 
 function M.get_artist()
-  local info = M.player_info()
-  return info.artist
+    local info = M.player_info()
+    return info.artist
 end
 
 function M.get_title()
@@ -33,48 +67,57 @@ end
 
 function M.length()
   local info = M.player_info()
-  to_second = math.floor(info.length/1000000) 
-  return to_second
+  if info.length then
+    local to_second = math.floor(info.length/1000000) 
+    return to_second
+  end
+  return 0
 end
 
 function M.get_position()
-  player = Playerctl.Player.new()
-  position = player:get_position()
-  to_second = math.floor(position/1000000) 
-  return to_second
+  local current_player = get_player()
+  if not current_player then
+    return 0
+  end
+  local position = current_player:get_position()
+  if position then
+    local to_second = math.floor(position/1000000) 
+    return to_second
+  end
+  return 0
 end
+
 
 function M.length_min_sec()
   local seconds = M.length()
   local min = math.floor(seconds / 60)
   local sec = seconds % 60
-  bstr = min..":"..sec
+  local bstr = min..":"..(sec < 10 and "0"..sec or sec)
   return bstr
 end
 
 function M.play_pause()
-  player = Playerctl.Player.new()
-  return player:play_pause()
+  local current_player = get_player()
+  return current_player:play_pause()
 end
 
 function M.next()
-  player = Playerctl.Player.new()
-  return player:next()
+  local current_player = get_player()
+  return current_player:next()
 end
 
 function M.previous()
-  player = Playerctl.Player.new()
-  return player:previous()
+  local current_player = get_player()
+  return current_player:previous()
 end
 
 function M.get_album_art()
-  -- para los usarios de awesomewm es necesario cargar la superficie cairo desde pixbuf
   local info = M.player_info()
   local artUrlstr = info.artUrl
 
   if artUrlstr and string.find(artUrlstr, "^data:image/.*;base64,") then
-    image64 = string.gsub(artUrlstr, "^data:image/[^;]*;base64,", "")
-    decode_image = GLib.base64_decode(image64)
+    local image64 = string.gsub(artUrlstr, "^data:image/[^;]*;base64,", "")
+    local decode_image = GLib.base64_decode(image64)
     if decode_image then
       local imagePix = GdkPixbuf.PixbufLoader.new()
       imagePix:write(decode_image)
@@ -88,7 +131,12 @@ function M.get_album_art()
     file_path = GLib.uri_unescape_string(file_path, nil)
     return GdkPixbuf.Pixbuf.new_from_file(file_path)
   end
-      
+  return nil
+end
+
+function M.reconnect_player()
+  player = nil
+  return get_player()
 end
 
 return M
