@@ -51,7 +51,7 @@ function app:on_startup()
     left_bar:set_size_request(15, 1) 
 
     local right_bar = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-    right_bar:set_size_request(50, 1)
+    right_bar:set_size_request(60, 1)
 
     local bottom_bar = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
     bottom_bar:set_size_request(1, 15) 
@@ -71,7 +71,7 @@ function app:on_startup()
     -----------------------------BARRA------------------------------
     ----------------------------------------------------------------
     local bar_win = Gtk.ApplicationWindow.new(self)
-    bar_win:set_default_size(1,1)
+    bar_win:set_default_size(50,1)
 
     -- Capa del shell (barra)
     LayerShell.init_for_window(bar_win)
@@ -80,14 +80,36 @@ function app:on_startup()
     LayerShell.set_anchor(bar_win, LayerShell.Edge.RIGHT, true)
     LayerShell.set_anchor(bar_win, LayerShell.Edge.TOP, true)
     LayerShell.set_anchor(bar_win, LayerShell.Edge.BOTTOM, true)
-    LayerShell.set_margin(bar_win, LayerShell.Edge.LEFT, 40)
+    LayerShell.set_margin(bar_win, LayerShell.Edge.LEFT, 5)
     LayerShell.set_margin(bar_win, LayerShell.Edge.RIGHT, 0)
     LayerShell.set_margin(bar_win, LayerShell.Edge.TOP, 0)
     LayerShell.set_margin(bar_win, LayerShell.Edge.BOTTOM, 0)
     LayerShell.auto_exclusive_zone_enable(bar_win)
 
-    --bar_win.child = Gtk.Label.new("E")
-    --bar_win:present()
+    local main_bar = Gtk.CenterBox.new()
+    main_bar.orientation = Gtk.Orientation.VERTICAL
+    main_bar.margin_top = 20
+    main_bar.margin_end = 3
+    main_bar.margin_bottom = 20
+    --main_bar:add_css_class('box-search')
+
+    
+    local launcher_icon = Gtk.Image.new_from_file("res/launcher_icon.png")
+    launcher_icon:set_pixel_size(46)
+
+    local launcher_buttom = Gtk.Button.new()
+    --launcher_buttom:set_child(launcher_icon)
+
+    local top_widgets = Gtk.Box.new(Gtk.Orientation.VERTICAL, 10)
+    top_widgets:append(launcher_icon)
+
+    main_bar.start_widget = top_widgets
+    main_bar.center_widget = Gtk.Label.new()
+    main_bar.end_widget = Gtk.Image.new_from_file("res/search.svg")
+
+    bar_win.child = main_bar
+    bar_win:present()
+    print(main_bar:get_baseline_position())
 end
 
 function app:on_activate()
