@@ -37,7 +37,8 @@ function M.player_info()
       title  = "none",
       album  = "none",
       artUrl = "none",
-      length = 0
+      length = 0,
+      status = "EXITED"
     }
   end
 
@@ -46,7 +47,8 @@ function M.player_info()
     title  = current_player:print_metadata_prop("xesam:title"),
     album  = current_player:print_metadata_prop("xesam:album"),
     artUrl = current_player:print_metadata_prop("mpris:artUrl"),
-    length = current_player:print_metadata_prop("mpris:length")
+    length = current_player:print_metadata_prop("mpris:length"),
+    status = current_player.playback_status
   }
 end
 
@@ -132,6 +134,38 @@ function M.get_album_art()
     return GdkPixbuf.Pixbuf.new_from_file(file_path)
   end
   return nil
+end
+
+local function get_contrasting_text_color(r, g, b)
+  local luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+  return luminance > 128 and "#000000" or "#ffffff"
+end
+
+function M.get_album_colors()
+  local pixbuf = M.get_album_art()
+
+  if not pixbuf then 
+    return "#353535", "#ffffff" -- wall gris, text white; default
+  end
+
+  local one_pixel = pixbuf:scale_simple(3, 3, 'BILINEAR')
+  
+  if not one_pixel then
+    return "#353535", "#ffffff"
+  end
+
+
+  local bytes = one_pixel:read_pixel_bytes()
+  local data = bytes:get_data() 
+
+  local r = string.byte(data, 1)
+  local g = string.byte(data, 2)
+  local b = string.byte(data, 3)
+
+  local bg_hex = string.format("#%02x%02x%02x", r, g, b)
+  local fg_hex = get_contrasting_text_color(r, g, b)
+  
+  return bg_hex, fg_hex
 end
 
 function M.reconnect_player()

@@ -5,29 +5,23 @@ local GObject = lgi.require("GObject")
 
 local M = {}
 
--- datos para días y meses
+-- Tablas de días y meses
 M.wdays = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"}
-M.wmonths = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"}
+M.wmonths = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
+             "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"}
 
--- funciones auxiliares
-function M.get_day(n_wday)
-  return M.wdays[n_wday] or "none"
-end
-
-function M.get_month(n_wmonth)
-  return M.wmonths[n_wmonth] or "none"
-end
-
+-- Funciones auxiliares
 function M.dias_en_mes(mes, anio)
   local dias_por_mes = {
     [1] = 31, [3] = 31, [5] = 31, [7] = 31, [8] = 31, [10] = 31, [12] = 31,
     [4] = 30, [6] = 30, [9] = 30, [11] = 30
   }
+  
   if mes == 2 then
     if (anio % 4 == 0 and anio % 100 ~= 0) or (anio % 400 == 0) then
-        return 29
+      return 29
     else
-        return 28
+      return 28
     end
   else
     return dias_por_mes[mes] or 31
@@ -48,46 +42,46 @@ function M.crear_calendario(mes, anio)
   local calendario_box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 10)
   calendario_box:add_css_class("box_dashboard")
 
-  -- encabezado
-  local cal_mes = Gtk.Label.new(M.get_month(mes)..", "..anio)
+  -- Encabezado
+  local cal_mes = Gtk.Label.new(M.wmonths[mes] .. ", " .. anio)
   cal_mes.margin_start = 20
   cal_mes.margin_top = 20
   cal_mes.halign = Gtk.Align.START
   cal_mes:add_css_class("cal-header")
 
-  -- grid para los días
+  -- Grid para días
   local cal_dias = Gtk.Grid.new()
   cal_dias.margin_start = 20
   cal_dias.margin_end = 20
   cal_dias.margin_bottom = 20
 
-  -- obtener información del mes
+  -- Información del mes
   local total_dias = M.dias_en_mes(mes, anio)
   local dia_inicio = M.obtener_dia_inicio(mes, anio)
   local dia_actual = (mes == f.month and anio == f.year) and f.day or nil
 
-  -- llenar el calendario
+  -- Llenar calendario
   local fila = 2
   local dia_numero = 1
 
   while dia_numero <= total_dias do
     for c = 1, 7 do
       if (fila == 2 and c < dia_inicio) or dia_numero > total_dias then
-        -- celda vacía
+        -- Celda vacía
         local vacio = Gtk.Label.new("")
         vacio:add_css_class("cal-empty")
         cal_dias:attach(vacio, c, fila, 1, 1)
       else
-        -- celda con día del mes
+        -- Celda con día
         local cal_dia = Gtk.Label.new(tostring(dia_numero))
         cal_dia:add_css_class("cal-day")
 
-      if dia_numero == dia_actual then
-        cal_dia:add_css_class("cal-today")
-      end
+        if dia_numero == dia_actual then
+          cal_dia:add_css_class("cal-today")
+        end
 
-      cal_dias:attach(cal_dia, c, fila, 1, 1)
-      dia_numero = dia_numero + 1
+        cal_dias:attach(cal_dia, c, fila, 1, 1)
+        dia_numero = dia_numero + 1
       end
     end
     fila = fila + 1
@@ -107,7 +101,7 @@ function M.updatable_calendar()
     local f = os.date("*t")
     local new_calendar = M.crear_calendario(f.month, f.year)
         
-    -- Reemplazar el calendario actual
+    -- Reemplazar calendario actual
     if current_calendar then
       calendar_container:remove(current_calendar)
     end
@@ -115,13 +109,13 @@ function M.updatable_calendar()
     calendar_container:append(new_calendar)
     current_calendar = new_calendar
         
-    M.midnight_update(update_calendar)
     return false
   end
     
-  function M.midnight_update(callback)
+  -- Programar actualización a medianoche
+  local function schedule_midnight_update()
     local now = os.time()
-    local tomorrow = os.date("*t", now + 86400) -- +1 día
+    local tomorrow = os.date("*t", now + 86400)
     local midnight_tomorrow = os.time({
       year = tomorrow.year,
       month = tomorrow.month,
@@ -132,17 +126,15 @@ function M.updatable_calendar()
     local seconds_to_wait = midnight_tomorrow - now
         
     GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, seconds_to_wait, function()
-      callback()
-      return false -- Ejecutar solo una vez
+      update_calendar()
+      schedule_midnight_update() -- Reprogramar para mañana
+      return false
     end)
-        
-    return false
   end
     
   current_calendar = M.crear_calendario()
   calendar_container:append(current_calendar)
-    
-  M.midnight_update(update_calendar)
+  schedule_midnight_update()
     
   return calendar_container
 end
