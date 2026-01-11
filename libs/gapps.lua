@@ -3,11 +3,13 @@
 local lgi = require('lgi')
 local Gio = lgi.require('Gio')
 
-M = {}
+local M = {}
 
 function M.get_all_apps()
   local apps = {}
-  for _, app_info in ipairs(Gio.AppInfo.get_all()) do
+  local all_info = Gio.AppInfo.get_all()
+  
+  for _, app_info in ipairs(all_info) do
     local id = app_info:get_id()
     apps[id] = {
       obj = app_info,
@@ -17,8 +19,11 @@ function M.get_all_apps()
       launch = function() app_info:launch({}, nil) end
     }
   end
+
+  all_info = nil 
+  collectgarbage("step") 
+  
   return apps
 end
-
 
 return M

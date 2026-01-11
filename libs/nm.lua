@@ -61,6 +61,7 @@ function M.get_wifi_info()
     end
   end
 
+  wifi_dev = nil
   return current_status
 end
 

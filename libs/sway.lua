@@ -1,12 +1,11 @@
--- sway-ipc
+-- libs/sway.lua
 -- Módulo de IPC de Sway con parseo de JSON automático.
 local lgi = require('lgi')
 local Gio = lgi.Gio
 local Json = lgi.Json
+local ffi = require('ffi') 
 
 local M = {}
-
-local ffi = require('ffi') 
 
 -- el header de i3/sway es: "i3-ipc" (6 bytes) + length (u32) + type (u32)
 ffi.cdef[[
@@ -81,6 +80,10 @@ function M.send_raw(conn, command, msg_type)
   end
     
   local response = response_raw:get_data()
+  
+  -- Limpieza de buffers temporales
+  header_data_raw = nil
+  response_raw = nil
     
   return response
 end
@@ -91,24 +94,29 @@ function M.close(conn)
   end
 end
 
+local function parse_json_to_lua(str)
+    --- wwworkingmamameelbicho
+    return str 
+end
+
 function M.get_workspaces(conn)
   local json_string = M.send_raw(conn, "get_workspaces", M.GET_WORKSPACES)
   return json_string
 end
 
 function M.get_outputs(conn)
-    local json_string = M.send_raw(conn, "get_outputs", M.GET_OUTPUTS)
-    return parse_json_to_lua(json_string)
+  local json_string = M.send_raw(conn, "get_outputs", M.GET_OUTPUTS)
+  return parse_json_to_lua(json_string)
 end
 
 function M.get_tree(conn)
-    local json_string = M.send_raw(conn, "get_tree", M.GET_TREE)
-    return parse_json_to_lua(json_string)
+  local json_string = M.send_raw(conn, "get_tree", M.GET_TREE)
+  return parse_json_to_lua(json_string)
 end
 
 function M.get_version(conn)
-    local json_string = M.send_raw(conn, "get_version", M.GET_VERSION)
-    return json_string
+  local json_string = M.send_raw(conn, "get_version", M.GET_VERSION)
+  return json_string
 end
 
 function M.run_command(conn, command)
@@ -130,6 +138,6 @@ end
 
 function M.switch_workspace(conn, workspace_name)
   return M.run_command(conn, "workspace " .. workspace_name)
-end -- es lo mismo que workspace para mas largo el nombre de la funcion 
+end
 
 return M

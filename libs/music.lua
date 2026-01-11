@@ -1,3 +1,4 @@
+-- libs/music.lua
 local lgi = require("lgi")
 local Playerctl = lgi.require("Playerctl")
 local GLib = lgi.require("GLib")
@@ -16,11 +17,11 @@ local function init_player()
     player = new_player
     player.on_exit = function(self)
       player = nil
+      collectgarbage("collect") 
     end
   end
   return player
 end
-
 
 local function get_player()
   if not player then
@@ -53,8 +54,8 @@ function M.player_info()
 end
 
 function M.get_artist()
-    local info = M.player_info()
-    return info.artist
+  local info = M.player_info()
+  return info.artist
 end
 
 function M.get_title()
@@ -89,7 +90,6 @@ function M.get_position()
   return 0
 end
 
-
 function M.length_min_sec()
   local seconds = M.length()
   local min = math.floor(seconds / 60)
@@ -123,7 +123,7 @@ function M.get_album_art()
     if decode_image then
       local imagePix = GdkPixbuf.PixbufLoader.new()
       imagePix:write(decode_image)
-      imagePix:close()
+      imagePix:close() 
       return imagePix:get_pixbuf()
     end
   end
@@ -154,7 +154,6 @@ function M.get_album_colors()
     return "#353535", "#ffffff"
   end
 
-
   local bytes = one_pixel:read_pixel_bytes()
   local data = bytes:get_data() 
 
@@ -164,12 +163,17 @@ function M.get_album_colors()
 
   local bg_hex = string.format("#%02x%02x%02x", r, g, b)
   local fg_hex = get_contrasting_text_color(r, g, b)
-  
+
+  pixbuf = nil
+  one_pixel = nil
+  bytes = nil
+
   return bg_hex, fg_hex
 end
 
 function M.reconnect_player()
   player = nil
+  collectgarbage("collect")
   return get_player()
 end
 

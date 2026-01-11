@@ -1,9 +1,10 @@
+-- dashboard.lua
 local lgi = require("lgi")
 local Gtk = lgi.require("Gtk", "4.0")
 local Gdk = lgi.require("Gdk", "4.0")
 local GdkPixbuf = lgi.require("GdkPixbuf", "2.0")
 local GLib = lgi.require("GLib")
-local cairo = lgi.require("cairo") -- Añadido para el dibujo
+local cairo = lgi.require("cairo")
 
 local calendario = require("calendario")
 local music = require("libs.music")
@@ -21,147 +22,148 @@ local function get_icon_texture()
   if not icon_texture then
     local icon_buf = GdkPixbuf.Pixbuf.new_from_file_at_scale('res/icon.jpg', 100, 100)
     icon_texture = Gdk.Texture.new_for_pixbuf(icon_buf)
+    icon_buf = nil 
   end
   return icon_texture
 end
 
 local function create_weather_widget()
-    local w = require("libs.weather")
+  local w = require("libs.weather")
+  
+  local weather_box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 2)
+  weather_box:add_css_class("weather-card") 
+
+  local location_label = Gtk.Label.new("loading...")
+  location_label:add_css_class("weather-location") 
+  location_label:set_use_markup(true)
+  
+  local temp_label = Gtk.Label.new("󰖒 --°C")
+  temp_label:add_css_class("weather-temp") 
+  temp_label:set_use_markup(true)
+  
+  local details_label = Gtk.Label.new("sincronizando...")
+  details_label:add_css_class("weather-details") 
+  details_label:set_use_markup(true)
+
+  local function refresh_ui()
+    if not w.datos.load then return end
+
+    location_label:set_markup(string.format(
+      "<span weight='bold'>%s, %s</span>\n<span size='10pt'>%s</span>", 
+      w.datos.state, w.datos.country, 
+      w.datos.descrip))
     
-    local weather_box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 2)
-    weather_box:add_css_class("weather-card") 
+    temp_label:set_markup(string.format(
+      "<span font_desc='24'>%s </span> <span size='22pt' weight='heavy'>%s</span>", 
+      w.datos.emoji, 
+      w.datos.temp)) 
 
-    local location_label = Gtk.Label.new("loading...")
-    location_label:add_css_class("weather-location") 
-    location_label:set_use_markup(true)
-    
-    local temp_label = Gtk.Label.new("󰖒 --°C")
-    temp_label:add_css_class("weather-temp") 
-    temp_label:set_use_markup(true)
-    
-    local details_label = Gtk.Label.new("sincronizando...")
-    details_label:add_css_class("weather-details") 
-    details_label:set_use_markup(true)
+    details_label:set_markup(string.format(
+      "<span size='10pt'>󱪈  %s,  󱪀  %s</span>", 
+      w.datos.wind, 
+      w.datos.humi))
+  end
 
-    local function refresh_ui()
-        if not w.datos.load then return end
+  local function update_weather()
+    details_label:set_markup("<span size='x-small' alpha='50%%'>Updating...</span>")
 
-        location_label:set_markup(string.format(
-            "<span weight='bold'>%s, %s</span>\n<span size='10pt'>%s</span>", 
-            w.datos.state, w.datos.country, 
-            w.datos.descrip))
-        
-        temp_label:set_markup(string.format(
-            "<span font_desc='24'>%s </span> <span size='22pt' weight='heavy'>%s</span>", 
-            w.datos.emoji, 
-            w.datos.temp)) 
-
-        details_label:set_markup(string.format(
-            "<span size='10pt'>󱪈  %s,  󱪀  %s</span>", 
-            w.datos.wind, 
-            w.datos.humi))
-    end
-
-    local function update_weather()
-        details_label:set_markup("<span size='x-small' alpha='50%%'>Updating...</span>")
-
-        w.update(10, function(data)
-            GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
-                refresh_ui()
-                return false 
-            end)
-        end)
-
-        if not w.datos.load then
-            details_label:set_markup("<span size='x-small' color='#ff5555'>error de conexión</span>")
-        end
-    end
-
-    -- Ejecución inicial y ciclo de 30 min
-    GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1, function()
-        update_weather()
-        return false
+    w.update(10, function(data)
+      GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
+        refresh_ui()
+        return false 
+      end)
     end)
 
-    GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1800, function()
-        update_weather()
-        return true
-    end)
+    if not w.datos.load then
+      details_label:set_markup("<span size='x-small' color='#ff5555'>error de conexión</span>")
+    end
+  end
 
-    weather_box:append(location_label)
-    weather_box:append(temp_label)
-    weather_box:append(details_label)
+  -- Ejecución inicial y ciclo de 30 min
+  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1, function()
+    update_weather()
+    return false
+  end)
 
-    return weather_box
+  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1800, function()
+    update_weather()
+    return true
+  end)
+
+  weather_box:append(location_label)
+  weather_box:append(temp_label)
+  weather_box:append(details_label)
+
+  return weather_box
 end
 
 local function create_sys_widget()
-    local System = require("libs.system_i")
-    local Gtk = lgi.Gtk
-    local GLib = lgi.GLib
+  local System = require("libs.system_i")
+  local Gtk = lgi.Gtk
+  local GLib = lgi.GLib
 
-    local main_box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-    main_box:add_css_class("sys-status-card")
-    main_box:set_size_request(-1, 100)
+  local main_box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
+  main_box:add_css_class("sys-status-card")
+  main_box:set_size_request(-1, 100)
 
-    local function create_row(icon, color_class, alignment)
-        local row = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
-        row:set_valign(Gtk.Align.CENTER)
-        row:set_vexpand(true) 
+  local function create_row(icon, color_class, alignment)
+    local row = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 12)
+    row:set_valign(Gtk.Align.CENTER)
+    row:set_vexpand(true) 
 
-        local icon_label = Gtk.Label.new(icon)
-        icon_label:add_css_class("sys-icon-small")
+    local icon_label = Gtk.Label.new(icon)
+    icon_label:add_css_class("sys-icon-small")
 
-        local bar = Gtk.LevelBar.new()
-        bar:set_orientation(Gtk.Orientation.HORIZONTAL)
-        bar:set_min_value(0)
-        bar:set_max_value(100)
-        bar:set_hexpand(true)
-        bar:set_valign(Gtk.Align.CENTER) 
+    local bar = Gtk.LevelBar.new()
+    bar:set_orientation(Gtk.Orientation.HORIZONTAL)
+    bar:set_min_value(0)
+    bar:set_max_value(100)
+    bar:set_hexpand(true)
+    bar:set_valign(Gtk.Align.CENTER) 
 
-        bar:set_size_request(-1, 2) 
-        bar:set_margin_start(10)
-        bar:set_margin_end(20)
-        
-        bar:add_css_class("sys-bar-ultra-slim")
-        if color_class then bar:add_css_class(color_class) end
+    bar:set_size_request(-1, 2) 
+    bar:set_margin_start(10)
+    bar:set_margin_end(20)
+    
+    bar:add_css_class("sys-bar-ultra-slim")
+    if color_class then bar:add_css_class(color_class) end
 
-        row:append(icon_label)
-        row:append(bar)
-        
-        return row, bar
-    end
+    row:append(icon_label)
+    row:append(bar)
+    
+    return row, bar
+  end
 
-    local cpu_row, cpu_bar = create_row("", "bar-cpu")
-    local ram_row, ram_bar = create_row("", "bar-ram")
-    local disk_row, disk_bar = create_row("󰋊", "bar-disk")
+  local cpu_row, cpu_bar = create_row("", "bar-cpu")
+  local ram_row, ram_bar = create_row("", "bar-ram")
+  local disk_row, disk_bar = create_row("󰋊", "bar-disk")
 
-    cpu_row:set_valign(Gtk.Align.START)  
-    ram_row:set_valign(Gtk.Align.CENTER)
-    disk_row:set_valign(Gtk.Align.END)  
+  cpu_row:set_valign(Gtk.Align.START)  
+  ram_row:set_valign(Gtk.Align.CENTER)
+  disk_row:set_valign(Gtk.Align.END)  
 
-    main_box:append(cpu_row)
-    main_box:append(ram_row)
-    main_box:append(disk_row)
+  main_box:append(cpu_row)
+  main_box:append(ram_row)
+  main_box:append(disk_row)
 
-    local function update_stats()
-        local cpu_usage = System.get_cpu_used()
-        local mem_info = System.get_mem_info()
-        local disk_usage = System.get_disk_usage('/') 
+  local function update_stats()
+    local cpu_usage = System.get_cpu_used()
+    local mem_info = System.get_mem_info()
+    local disk_usage = System.get_disk_usage('/') 
 
-        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
-            cpu_bar:set_value(cpu_usage)
-            ram_bar:set_value(mem_info.ram.percent_used)
-            disk_bar:set_value(disk_usage)
-            return false
-        end)
-        return true 
-    end
+    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
+      cpu_bar:set_value(cpu_usage)
+      ram_bar:set_value(mem_info.ram.percent_used)
+      disk_bar:set_value(disk_usage)
+      return false
+    end)
+    return true 
+  end
 
-    GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, update_stats)
-    update_stats()
+  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, update_stats)
+  update_stats()
 
-    return main_box
+  return main_box
 end
 
 local function c_music_box()
@@ -179,6 +181,12 @@ local function c_music_box()
   music_box.margin_top = 10
   music_box.margin_bottom = 10
   music_box:add_css_class("simple-music-box")
+
+  local music_style_provider = Gtk.CssProvider.new()
+  local display = Gdk.Display.get_default()
+  if display then
+    Gtk.StyleContext.add_provider_for_display(display, music_style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+  end
 
   local album_art = Gtk.Image { pixel_size = 110 }
   album_art:add_css_class("album-card")
@@ -198,7 +206,7 @@ local function c_music_box()
   progress_area.hexpand = true 
   progress_area.valign = Gtk.Align.CENTER 
 
-local function draw_progress_wave(area, cr, width, height)
+  local function draw_progress_wave(area, cr, width, height)
     local padding = 2 
     local y_center = height / 2
     local bar_width = width -- - (padding * 2)
@@ -207,42 +215,42 @@ local function draw_progress_wave(area, cr, width, height)
     local line_height = 3.0 
 
     if active_end_x < (width - padding) then
-        cr:set_source_rgba(0.5, 0.5, 0.5, 0.25)
-        cr:set_line_width(line_height)
-        cr:set_line_cap(cairo.LineCap.ROUND)
-        cr:move_to(active_end_x, y_center)
-        cr:line_to(width - padding, y_center)
-        cr:stroke()
+      cr:set_source_rgba(0.5, 0.5, 0.5, 0.25)
+      cr:set_line_width(line_height)
+      cr:set_line_cap(cairo.LineCap.ROUND)
+      cr:move_to(active_end_x, y_center)
+      cr:line_to(width - padding, y_center)
+      cr:stroke()
     end
 
     cr:set_source_rgb(wave_color.r, wave_color.g, wave_color.b)
     cr:set_line_width(line_height)
     
     if current_progress > 0 then
-        local wave_amplitude = is_playing_state and 3.5 or 0.0
-        local wave_frequency = 6.0
-        local wave_speed = 6.0
-        local num_segments = math.max(math.floor(active_length / 1.5), 2)
+      local wave_amplitude = is_playing_state and 3.5 or 0.0
+      local wave_frequency = 6.0
+      local wave_speed = 6.0
+      local num_segments = math.max(math.floor(active_length / 1.5), 2)
 
-        cr:move_to(padding, y_center)
-        for i = 1, num_segments do
-            local x_pos = padding + (i / num_segments) * active_length
-            local x_factor = (x_pos - padding) / bar_width
-            local wave_offset = math.sin(x_factor * PI * wave_frequency * 2 + animation_time * wave_speed)
-            local y_pos = y_center + (wave_offset * wave_amplitude)
-            cr:line_to(x_pos, y_pos)
-        end
-        cr:stroke()
+      cr:move_to(padding, y_center)
+      for i = 1, num_segments do
+        local x_pos = padding + (i / num_segments) * active_length
+        local x_factor = (x_pos - padding) / bar_width
+        local wave_offset = math.sin(x_factor * PI * wave_frequency * 2 + animation_time * wave_speed)
+        local y_pos = y_center + (wave_offset * wave_amplitude)
+        cr:line_to(x_pos, y_pos)
+      end
+      cr:stroke()
 
-        local indicator_height = 14.0
-        local indicator_width = 4.0  
-        
-        cr:set_line_width(indicator_width)
-        cr:set_line_cap(cairo.LineCap.ROUND) 
-        
-        cr:move_to(active_end_x, y_center - (indicator_height / 2))
-        cr:line_to(active_end_x, y_center + (indicator_height / 2))
-        cr:stroke()
+      local indicator_height = 14.0
+      local indicator_width = 4.0  
+      
+      cr:set_line_width(indicator_width)
+      cr:set_line_cap(cairo.LineCap.ROUND) 
+      
+      cr:move_to(active_end_x, y_center - (indicator_height / 2))
+      cr:line_to(active_end_x, y_center + (indicator_height / 2))
+      cr:stroke()
     end
   end
   progress_area:set_draw_func(draw_progress_wave, nil, nil)
@@ -351,10 +359,10 @@ local function draw_progress_wave(area, cr, width, height)
       }
     ]], bg_color, bg_color, bg_color, text_color, text_color)
 
-    local provider = Gtk.CssProvider.new()
-    provider:load_from_data(css, #css)
-    local display = music_box:get_display()
-    if display then Gtk.StyleContext.add_provider_for_display(display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION) end
+    music_style_provider:load_from_data(css, #css)
+
+    pixbuf = nil
+    
     return true 
   end
 
@@ -523,7 +531,6 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
 
   center_box_dashboard:append(celdas)
 
-
   local h_right_box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 10)
   h_right_box.margin_bottom = 10
   h_right_box.margin_start = 20
@@ -541,7 +548,7 @@ function M.create_dashboard(Gtk, LayerShell, GLib)
   dashboard.vexpand = false
   dashboard.start_widget = start_dashboard_main
   dashboard.center_widget = center_box_dashboard
-  dashboard.end_widget = right_box -- create_weather_widget() --c_music_box()
+  dashboard.end_widget = right_box 
   dashboard:add_css_class("dashboard")
 
   local revealer = Gtk.Revealer.new()

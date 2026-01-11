@@ -1,3 +1,4 @@
+-- calendario.lua
 local lgi = require("lgi")
 local Gtk = lgi.require("Gtk", "4.0")
 local GLib = lgi.require("GLib")
@@ -104,6 +105,8 @@ function M.updatable_calendar()
     -- Reemplazar calendario actual
     if current_calendar then
       calendar_container:remove(current_calendar)
+      current_calendar = nil
+      collectgarbage("step") 
     end
         
     calendar_container:append(new_calendar)

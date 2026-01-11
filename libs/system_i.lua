@@ -1,3 +1,4 @@
+-- libs/system_i.lua
 local lgi = require("lgi")
 local GTop = lgi.require("GTop")
 local UPowerGlib = lgi.require("UPowerGlib")
@@ -5,6 +6,14 @@ local UPowerGlib = lgi.require("UPowerGlib")
 local M = {} 
 
 GTop.glibtop_init()
+
+local upower_client = nil
+local function get_upower_client()
+  if not upower_client then
+    upower_client = UPowerGlib.Client.new()
+  end
+  return upower_client
+end
 
 local battery_cache = nil
 local battery_cache_time = 0
@@ -54,17 +63,21 @@ function M.get_battery_info()
     return battery_cache
   end
 
-  local client = UPowerGlib.Client.new()
-  for _, device in pairs(client:get_devices()) do 
-    if device:get_object_path() == "/org/freedesktop/UPower/devices/battery_BAT0" then
-      battery_cache = {
-        percentage = device.percentage,
-        state = device.state,
-        time_empty = device.time_to_empty,
-        time_full = device.time_to_full
-      }
-      battery_cache_time = current_time
-      return battery_cache
+  local client = get_upower_client()
+  local devices = client:get_devices()
+
+  if devices then
+    for _, device in pairs(devices) do 
+      if device:get_object_path() == "/org/freedesktop/UPower/devices/battery_BAT0" then
+        battery_cache = {
+          percentage = device.percentage,
+          state = device.state,
+          time_empty = device.time_to_empty,
+          time_full = device.time_to_full
+        }
+        battery_cache_time = current_time
+        return battery_cache
+      end
     end
   end
   

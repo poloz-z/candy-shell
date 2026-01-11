@@ -1,3 +1,4 @@
+-- main.lua
 local ffi = require("ffi")
 ffi.C = ffi.load("gtk4-layer-shell")
 
@@ -185,9 +186,7 @@ function app:on_startup()
   wallpaper.vexpand = true
   wallpaper:add_css_class("wallpaper")
 
-
   local top_bar_widget = Dashboard.create_dashboard(Gtk, LayerShell, GLib)
-
 
   local left_bar = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
   left_bar:set_size_request(15, 1) 
@@ -207,7 +206,6 @@ function app:on_startup()
 
   bg_win.content = celdas
   bg_win:present()
-
 
   local bar_win = Gtk.ApplicationWindow.new(self)
   bar_win:set_default_size(1, 50)
