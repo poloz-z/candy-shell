@@ -85,7 +85,7 @@ local function create_weather_widget()
     return false
   end)
 
-  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1800, function()
+  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 60, function()
     update_weather()
     return true
   end)
@@ -153,7 +153,7 @@ local function create_sys_widget()
 
     GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
       cpu_bar:set_value(cpu_usage)
-      ram_bar:set_value(mem_info.ram.percent_used)
+      ram_bar:set_value(mem_info.ram.percent_real_used)
       disk_bar:set_value(disk_usage)
       return false
     end)

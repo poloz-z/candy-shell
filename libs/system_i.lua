@@ -29,11 +29,15 @@ function M.get_mem_info()
     return bytes / (1024 * 1024)
   end
 
+  local real_used = mem.used - mem.buffer - mem.cached
+
   return {
     ram = {
       total = to_mb(mem.total),
       used = to_mb(mem.used),
       free = to_mb(mem.free),
+      real_used = to_mb(real_used),
+      percent_real_used = (real_used / mem.total) * 100,
       percent_used = (mem.used / mem.total) * 100
     },
     swap = {
