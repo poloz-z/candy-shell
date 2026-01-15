@@ -32,20 +32,20 @@ local icons_emoji = {
 
 local current_info = nil
 
-function M.update(seconds, callback)
+function M.update(seconds, lat, lon, callback)
   local mundo = GWeather.Location.get_world()
-  local caracas = mundo:find_nearest_city(10.48, -66.90)  -- edit con tu ciudad
+  local city = mundo:find_nearest_city(lat, lon) --(10.48, -66.90)  -- edit con tu ciudad
 
-  if not caracas then return false, "not found" end
+  if not city then return false, "not found" end
 
   if current_info then
     current_info = nil
   end
 
   local info = GWeather.Info.new()
-  current_info = info -- Guardar referencia para gestionar ciclo de vida
+  current_info = info 
 
-  info:set_location(caracas)
+  info:set_location(city)
   info:set_application_id("io.github.poloz_z.CandyShell.Lua.Gtk4.Shell")
   info:set_contact_info("jpolo5678@gmail.com") 
   info:set_enabled_providers("MET_NO")
@@ -54,8 +54,8 @@ function M.update(seconds, callback)
   local success = false
 
   info.on_updated = function(self)
-    M.datos.state = caracas:get_city_name()
-    M.datos.country = caracas:get_country_name()
+    M.datos.state = city:get_city_name()
+    M.datos.country = city:get_country_name()
     
     M.datos.temp = self:get_temp()
     M.datos.descrip = self:get_conditions()

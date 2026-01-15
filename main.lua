@@ -12,6 +12,8 @@ local Adw = lgi.require("Adw")
 local SystemInfo = require('libs.system_i')
 local NetworkManager = require('libs.nm')
 local GApps = require('libs.gapps')
+local Theme = require('libs.theme')
+
 local Dashboard = require("dashboard")
 
 local appID = "io.github.poloz_z.CandyShell.Lua.Gtk4.Shell"
@@ -38,7 +40,6 @@ local function create_battery_label()
     local percentage = SystemInfo.get_battery_percentage() or 0
     local state = SystemInfo.get_battery_state() or 0
     local is_charging = (state == 1)
-    local color = "#333333"
     local icon = ""
 
     if is_charging then
@@ -58,8 +59,8 @@ local function create_battery_label()
     end
 
     battery_label:set_markup(string.format(
-      '<span foreground="%s">%s %d%%</span>',
-      color, icon, math.floor(percentage)
+      '<span>%s %d%%</span>',
+      icon, math.floor(percentage)
     ))
     return true
   end
@@ -83,7 +84,6 @@ local function create_wifi_label()
     local strength = NetworkManager.get_wifi_strength() or 0
     local connected = NetworkManager.is_wifi_connected()
     local icon = wifi_icons.none
-    local color = "#333333"
 
     if connected then
       if strength >= 75 then icon = wifi_icons.excellent
@@ -92,7 +92,7 @@ local function create_wifi_label()
       else icon = wifi_icons.weak end
     end
 
-    wifi_label:set_markup(string.format('<span foreground="%s">%s</span>', color, icon))
+    wifi_label:set_markup(string.format('<span>%s</span>', icon))
     return true
   end
 
@@ -161,10 +161,13 @@ function app:on_startup()
   local bg_win = Adw.ApplicationWindow.new(self)
   bg_win:set_resizable(false)
 
+  wallpaper_path = "res/makimaa.png"
+
   local provider = Gtk.CssProvider()
   provider:load_from_path("custom.css")
   local display = bg_win:get_display()
   Gtk.StyleContext.add_provider_for_display(display, provider, 600)
+  Theme.apply(wallpaper_path, "light")
 
   LayerShell.init_for_window(bg_win)
   LayerShell.set_layer(bg_win, LayerShell.Layer.BACKGROUND)
@@ -178,7 +181,7 @@ function app:on_startup()
   LayerShell.set_margin(bg_win, LayerShell.Edge.TOP, 0)
   LayerShell.set_margin(bg_win, LayerShell.Edge.BOTTOM, 0)
 
-  local wallpaper = Gtk.Picture.new_for_filename("res/wall.png")
+  local wallpaper = Gtk.Picture.new_for_filename(wallpaper_path)
   wallpaper.content_fit = Gtk.ContentFit.COVER
   wallpaper.halign = Gtk.Align.FILL
   wallpaper.valign = Gtk.Align.FILL

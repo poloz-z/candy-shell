@@ -1,38 +1,38 @@
 window {
-    background-color: #fafafa; 
-    color: #333333; 
+  background-color: @background; 
+  color: @on_background; 
 }
 
 .wallpaper {
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e0e0e0;
+  border: 1px solid @outline_variant;
 }
 
 .pfp {
   border-radius: 20px;
   background-image:
-    url("res/pfp.png");
-  background-color: #ffffff; 
+    url("res/pfp.jpg");
+  background-color: @surface; 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border: 1px solid #f8bbd0; 
+  border: 1px solid @primary_container; 
 }
 
 .cal-header {
   font-family: "Roboto", sans-serif;
   font-size: 20px;
   font-weight: 600;
-  color: #ec407a; 
+  color: @primary; 
   letter-spacing: 0.15px;
   margin-bottom: 5px;
 }
 
 .box_dashboard {
   border-radius: 20px; 
-  background-color: #ffffff; 
-  border: 1px solid #e0e0e0;
+  background-color: @surface_container; 
+  border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -40,17 +40,17 @@ window {
   border-radius: 20px; 
   background-image:
     url("res/icon.jpg");
-  background-color: #ffffff; 
+  background-color: @surface; 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border: 1px solid #f8bbd0;
+  border: 1px solid @primary_container;
 }
 
 .icon-font-brands {
   font-family: "Font Awesome 6 Brands";
   font-size: 14px;
-  color: #ec407a;
+  color: @primary;
   padding: 0 5px;
 }
 
@@ -58,17 +58,17 @@ window {
   font-family: "Font Awesome 6 Pro", "Font Awesome 6 Free";
   font-weight: 900;
   font-size: 14px;
-  color: #ec407a; 
+  color: @primary; 
   padding: 0 5px;
 }
 
 .box-search {
   border-radius: 20px; 
-  background-color: #ffffff; 
+  background-color: @surface_container_high; 
   min-width: 32px;
   min-height: 32px;
   padding: 5px;
-  border: 1px solid #f8bbd0;
+  border: 1px solid @primary_container;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -82,24 +82,24 @@ window {
   min-height: 18px;
   margin: 2px;
   padding: 4px;
-  color: #666666; /* Gris medio */
+  color: @on_surface_variant; 
 }
 
 .cal-today {
-  background-color: #ec407a; /* Rosa Material */
+  background-color: @primary; 
   font-weight: 600;
   border-radius: 50%;
   min-width: 22px;
   min-height: 22px;
   font-family: "Roboto", sans-serif;
   font-size: 12px;
-  color: #ffffff; 
+  color: @on_primary; 
   padding: 8px;
   margin: 0px;
 }
 
 .time_label {
-  color: #ec407a; 
+  color: @primary; 
   font-family: "Roboto", sans-serif;
   font-size: 32px;
   font-weight: 700;
@@ -108,7 +108,7 @@ window {
 
 .user_label {
   font-style: italic;
-  color: #fafafa;
+  color: @primary;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -120,19 +120,19 @@ window {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border: 1px solid #f8bbd0;
+  border: 1px solid @primary_container;
 }
 
 .name_label {
   font-family: "Dancing Script", sans-serif;
   font-size: 32px;
   font-weight: 500;
-  color: #fafafa; 
+  color: @primary_fixed_dim; 
 }
 
 .frase_label {
   padding: 8px 16px;
-  color: #333333;
+  color: @on_surface;
   font-family: 'Dancing Script', cursive;
   font-size: 26px;
   font-weight: 500;
@@ -141,9 +141,9 @@ window {
 
 button.tray_button {
   border-radius: 16px;
-  border: 1px solid #f8bbd0;
-  background-color: #ffffff; 
-  color: #ec407a; 
+  border: 1px solid @outline;
+  background-color: @surface_container_low; 
+  color: @primary; 
   font-family: "Roboto", sans-serif;
   font-weight: 500;
   padding: 10px 16px;
@@ -151,12 +151,12 @@ button.tray_button {
 }
 
 button.tray_button:hover {
-  background-color: #fce4ec; 
-  border-color: #ec407a;
+  background-color: @secondary_container; 
+  border-color: @primary;
 }
 
 .barra-shell {
-  background-color: rgba(255, 255, 255, 0);
+  background-color: transparent;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
@@ -164,20 +164,20 @@ button.tray_button:hover {
   min-width: 48px;
   min-height: 48px;
   border-radius: 100px;
-  background-image: url("res/pfp.jpg");
+  background-image: url("res/icon.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid #e0e0e0; 
+  border: 1px solid @outline_variant; 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .sys-status-box {
-  background-color: #ffffff;
+  background-color: @surface_container;
   border-radius: 20px;
   padding: 15px 10px;
   margin: 5px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -185,69 +185,69 @@ button.tray_button:hover {
   font-family: "Roboto", sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: #333333;
+  color: @on_surface;
 }
 
 .apps-box {
-  background-color: #ffffff;
+  background-color: @surface_container;
   padding: 5px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid @outline_variant;
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .weather-card {
-  color: #333333;
+  color: @on_surface;
   border-radius: 20px; 
-  background-color: #ffffff; 
+  background-color: @surface_container; 
   min-width: 32px;
   min-height: 32px;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .weather-location {
   font-family: "Roboto", sans-serif;
-  color: #666666;
+  color: @on_surface_variant;
   margin-bottom: 2px;
 }
 
 .weather-temp {
   font-family: "Roboto", sans-serif;
-  color: #ec407a; /* Rosa Material */
+  color: @primary; 
   margin: 5px 0;
 }
 
 .weather-details {
   font-family: "Roboto", sans-serif;
-  color: #666666; 
+  color: @on_surface_variant; 
   padding-top: 3px;
   margin-top: 2px;
 }
 
 .sys-status-card {
-  background-color: #ffffff;
+  background-color: @surface_container;
   border-radius: 20px;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .sys-icon-small {
   font-size: 16px;
-  color: #ec407a; /* Rosa Material */
+  color: @primary; 
   min-width: 15px;
 }
 
 .sys-bar-ultra-slim block {
   min-height: 6px;
   border-radius: 20px;
-  background-color: #f0f0f0; /* Gris muy claro para fondo de barras */
+  background-color: @surface_container_highest; 
   border: none;
   margin: 5px;
 }
 
-.bar-cpu block.filled { background-color: #ec407a; } /* Rosa Material */
-.bar-ram block.filled { background-color: #f06292; } /* Rosa medio */
-.bar-disk block.filled { background-color: #f48fb1; } /* Rosa claro */
+.bar-cpu block.filled { background-color: @primary; } 
+.bar-ram block.filled { background-color: @secondary; } 
+.bar-disk block.filled { background-color: @tertiary; }

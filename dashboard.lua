@@ -67,7 +67,7 @@ local function create_weather_widget()
   local function update_weather()
     details_label:set_markup("<span size='x-small' alpha='50%%'>Updating...</span>")
 
-    w.update(10, function(data)
+    w.update(10, 10.48, -66.90, function(data)
       GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, function()
         refresh_ui()
         return false 
