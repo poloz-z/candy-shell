@@ -161,7 +161,7 @@ function app:on_startup()
   local bg_win = Adw.ApplicationWindow.new(self)
   bg_win:set_resizable(false)
 
-  wallpaper_path = "res/makimaa.png"
+  wallpaper_path = "res/bocci.png"
 
   local provider = Gtk.CssProvider()
   provider:load_from_path("custom.css")
@@ -181,6 +181,9 @@ function app:on_startup()
   LayerShell.set_margin(bg_win, LayerShell.Edge.TOP, 0)
   LayerShell.set_margin(bg_win, LayerShell.Edge.BOTTOM, 0)
 
+
+  -- nuevo metodo para wallpaper darle click izquierdo para elegir nuevo fondo
+  -- y click derecho para intercambiar entre tema (ligth o dark)
   local wallpaper = Gtk.Picture.new_for_filename(wallpaper_path)
   wallpaper.content_fit = Gtk.ContentFit.COVER
   wallpaper.halign = Gtk.Align.FILL
@@ -188,6 +191,51 @@ function app:on_startup()
   wallpaper.hexpand = true
   wallpaper.vexpand = true
   wallpaper:add_css_class("wallpaper")
+
+  local current_mode = "light"           
+  local current_wp_path = wallpaper_path 
+
+  local wp_file_dialog = Gtk.FileDialog.new()
+  wp_file_dialog.title = "new wallpaper"
+  
+  local wp_filter = Gtk.FileFilter.new()
+  wp_filter:set_name("Imágenes")
+  wp_filter:add_mime_type("image/jpeg")
+  wp_filter:add_mime_type("image/png")
+  wp_filter:add_mime_type("image/webp")
+  
+  local wp_filters_store = Gio.ListStore.new(Gtk.FileFilter)
+  wp_filters_store:append(wp_filter)
+  wp_file_dialog:set_filters(wp_filters_store)
+
+  local click_controller = Gtk.GestureClick.new()
+  click_controller:set_button(0) 
+  
+  function click_controller:on_pressed(n_press, x, y)
+    local btn = self:get_current_button()
+
+    if btn == 1 then
+      wp_file_dialog:open(nil, nil, function(dialog, result)
+        local file, err = dialog:open_finish(result)
+        if file then
+          current_wp_path = file:get_path()
+          wallpaper:set_file(file)
+          pcall(function() Theme.apply(current_wp_path, current_mode) end)
+        end
+      end)
+
+    elseif btn == 3 then
+      if current_mode == "light" then
+        current_mode = "dark"
+      else
+        current_mode = "light"
+      end
+      pcall(function() Theme.apply(current_wp_path, current_mode) end)
+    end
+  end
+
+  wallpaper:add_controller(click_controller)
+
 
   local top_bar_widget = Dashboard.create_dashboard(Gtk, LayerShell, GLib)
 

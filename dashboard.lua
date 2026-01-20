@@ -79,13 +79,12 @@ local function create_weather_widget()
     end
   end
 
-  -- Ejecución inicial y ciclo de 30 min
   GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1, function()
     update_weather()
     return false
   end)
 
-  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 60, function()
+  GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 300, function()
     update_weather()
     return true
   end)
@@ -188,6 +187,24 @@ local function c_music_box()
     Gtk.StyleContext.add_provider_for_display(display, music_style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
   end
 
+  -- bqse style
+  local base_css = [[
+    #simple_music_box { 
+      border-radius: 20px; 
+      padding: 15px; 
+      transition: background-color 1s ease, background-image 1s ease;
+    }
+    #music_artist, #music_title { 
+      transition: color 1s ease;
+    }
+    .music-control-btn { 
+      border: none; 
+      background: transparent; 
+      font-size: 1.2rem; 
+      transition: color 1s ease;
+    }
+  ]]
+
   local album_art = Gtk.Image { pixel_size = 110 }
   album_art:add_css_class("album-card")
   album_art.valign = Gtk.Align.CENTER
@@ -209,7 +226,7 @@ local function c_music_box()
   local function draw_progress_wave(area, cr, width, height)
     local padding = 2 
     local y_center = height / 2
-    local bar_width = width -- - (padding * 2)
+    local bar_width = width 
     local active_length = bar_width * current_progress
     local active_end_x = padding + active_length
     local line_height = 3.0 
@@ -260,13 +277,13 @@ local function c_music_box()
   m_text_box:append(artist_label)
 
   local center_layout = Gtk.Box.new(Gtk.Orientation.VERTICAL, 8) 
+  center_layout.hexpand = true
   center_layout.valign = Gtk.Align.CENTER
   center_layout.margin_start = 15
   center_layout.margin_end = 15
   center_layout:append(m_text_box)
   center_layout:append(progress_area)
 
-  -- Botones de control
   local prev_button = Gtk.Button.new()
   local prev_label = Gtk.Label.new("") 
   prev_button:set_child(prev_label)
@@ -317,18 +334,16 @@ local function c_music_box()
 
     if info and info.title and info.title ~= "none" then
       local title = tostring(info.title or "")
-      local artist = tostring(info.artist or "Desconocido")
-
-      title_label:set_text(#title > 22 and title:sub(1, 19).."..." or title)
-      artist_label:set_text(#artist > 20 and artist:sub(1, 18).."..." or artist)
-    
+      local artist = tostring(info.artist or "desconocido")
+      title_label:set_text(#title > 20 and title:sub(1, 17).."..." or title)
+      artist_label:set_text(#artist > 19 and artist:sub(1, 16).."..." or artist)
       is_playing_state = (info.status == "PLAYING")
       local pos = music.get_position() or 0
       local len = music.length() or 0
       current_progress = (len > 0) and (pos / len) or 0.0
     else
-      title_label:set_text("Sin música")
-      artist_label:set_text("Reproduce algo")
+      title_label:set_text("sin musica")
+      artist_label:set_text("reproduce algo")
       is_playing_state = false
       current_progress = 0.0
     end
@@ -341,27 +356,17 @@ local function c_music_box()
       album_art:set_from_file('res/no_music.png')
     end
 
-    local css = string.format([[
+    local dynamic_css = base_css .. string.format([[
       #simple_music_box { 
         background-color: %s; 
         background-image: radial-gradient(circle at center, %s 0%%, shade(%s, 0.6) 100%%); 
-        /* box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.9); */
-        border-radius: 20px; 
-        padding: 15px; 
       }
-      #music_artist, #music_title { 
+      #music_artist, #music_title, .music-control-btn { 
         color: %s; 
-      }
-      .music-control-btn { 
-        color: %s; border: none; 
-        background: transparent; 
-        font-size: 1.2rem; 
       }
     ]], bg_color, bg_color, bg_color, text_color, text_color)
 
-    music_style_provider:load_from_data(css, #css)
-
-    pixbuf = nil
+    music_style_provider:load_from_data(dynamic_css, #dynamic_css)
     
     return true 
   end

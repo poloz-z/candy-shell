@@ -1,6 +1,11 @@
 window {
   background-color: @background; 
   color: @on_background; 
+  transition: background-color 800ms ease-in-out, color 800ms ease-in-out;
+}
+
+label {
+  transition: color 800ms ease-in-out;
 }
 
 .wallpaper {
@@ -34,6 +39,7 @@ window {
   background-color: @surface_container; 
   border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 800ms ease-in-out, border-color 800ms ease-in-out;
 }
 
 .box_icon {
@@ -107,7 +113,7 @@ window {
 }
 
 .user_label {
-  font-style: italic;
+  /*font-style: italic;*/
   color: @primary;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
@@ -194,6 +200,7 @@ button.tray_button:hover {
   border: 1px solid @outline_variant;
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 800ms ease-in-out, border-color 800ms ease-in-out;
 }
 
 .weather-card {
@@ -205,6 +212,7 @@ button.tray_button:hover {
   padding: 15px;
   border: 1px solid @outline_variant;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 800ms ease-in-out, border-color 800ms ease-in-out;
 }
 
 .weather-location {
