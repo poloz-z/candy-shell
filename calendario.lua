@@ -115,22 +115,13 @@ function M.updatable_calendar()
     return false
   end
     
-  -- Programar actualización a medianoche
+  -- un minuto
   local function schedule_midnight_update()
-    local now = os.time()
-    local tomorrow = os.date("*t", now + 86400)
-    local midnight_tomorrow = os.time({
-      year = tomorrow.year,
-      month = tomorrow.month,
-      day = tomorrow.day,
-      hour = 0, min = 0, sec = 1
-    })
+
         
-    local seconds_to_wait = midnight_tomorrow - now
-        
-    GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, seconds_to_wait, function()
+    GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 60, function()
       update_calendar()
-      schedule_midnight_update() -- Reprogramar para mañana
+      schedule_midnight_update() 
       return false
     end)
   end
