@@ -161,13 +161,12 @@ function app:on_startup()
   local bg_win = Adw.ApplicationWindow.new(self)
   bg_win:set_resizable(false)
 
-  wallpaper_path = "res/bocci.png"
+  --wallpaper_path = "res/bocci.png"
 
   local provider = Gtk.CssProvider()
   provider:load_from_path("custom.css")
   local display = bg_win:get_display()
   Gtk.StyleContext.add_provider_for_display(display, provider, 600)
-  Theme.apply(wallpaper_path, "light")
 
   LayerShell.init_for_window(bg_win)
   LayerShell.set_layer(bg_win, LayerShell.Layer.BACKGROUND)
@@ -182,18 +181,22 @@ function app:on_startup()
   LayerShell.set_margin(bg_win, LayerShell.Edge.BOTTOM, 0)
 
 
+  local last_wallpaper, last_mode = Theme.get_saved_settings()
+
+  local current_mode = last_mode
+  local current_wp_path = last_wallpaper
+
+  Theme.apply(current_wp_path, current_mode)
+
   -- nuevo metodo para wallpaper darle click izquierdo para elegir nuevo fondo
   -- y click derecho para intercambiar entre tema (ligth o dark)
-  local wallpaper = Gtk.Picture.new_for_filename(wallpaper_path)
+  local wallpaper = Gtk.Picture.new_for_filename(current_wp_path)
   wallpaper.content_fit = Gtk.ContentFit.COVER
   wallpaper.halign = Gtk.Align.FILL
   wallpaper.valign = Gtk.Align.FILL
   wallpaper.hexpand = true
   wallpaper.vexpand = true
   wallpaper:add_css_class("wallpaper")
-
-  local current_mode = "light"           
-  local current_wp_path = wallpaper_path 
 
   local wp_file_dialog = Gtk.FileDialog.new()
   wp_file_dialog.title = "new wallpaper"
@@ -220,7 +223,10 @@ function app:on_startup()
         if file then
           current_wp_path = file:get_path()
           wallpaper:set_file(file)
-          pcall(function() Theme.apply(current_wp_path, current_mode) end)
+          pcall(function() 
+            Theme.apply(current_wp_path, current_mode) 
+            Theme.save_settings(current_wp_path, current_mode)
+          end)
         end
       end)
 
@@ -230,12 +236,14 @@ function app:on_startup()
       else
         current_mode = "light"
       end
-      pcall(function() Theme.apply(current_wp_path, current_mode) end)
+      pcall(function() 
+        Theme.apply(current_wp_path, current_mode) 
+        Theme.save_settings(current_wp_path, current_mode)
+      end)
     end
   end
 
   wallpaper:add_controller(click_controller)
-
 
   local top_bar_widget = Dashboard.create_dashboard(Gtk, LayerShell, GLib)
 
